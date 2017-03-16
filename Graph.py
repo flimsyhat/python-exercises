@@ -92,11 +92,27 @@ class Graph(dict):
     
     def edges(self):
         edge_list = []
-        for key, value in self.items():
-            [(vertex, edge)] = value.items()
-            if edge not in edge_list:
-                edge_list.append(edge)
+        if len(self) > 2:
+            for key, value in self.items():
+                for vertex, edge in value.items():
+                    if edge not in edge_list:
+                        edge_list.append(edge)
         return edge_list
+
+    def out_vertices(self, v):
+        [(vertex, edge)] = self[v].items()
+        return vertex
+    
+    def out_edges(self, v):
+        [(vertex, edge)] = self[v].items()
+        return edge
+
+    def add_all_edges(self):
+        for v in self.vertices():
+            other_verts = [x for x in self.vertices() if x != v]
+            for vertex in other_verts:
+                self.add_edge(Edge(v, vertex))
+            
 
 def main(script, *args):
     v = Vertex('v')
@@ -110,8 +126,8 @@ def main(script, *args):
     test_edge = g.get_edge(v,w)
     print g.vertices()
     print g.edges()
-    print g.remove_edge(e)
-    print g.edges()
+    print g.out_vertices(v)
+    print g.out_edges(v)
 
 if __name__ == '__main__':
     import sys
